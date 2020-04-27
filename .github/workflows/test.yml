@@ -24,11 +24,11 @@ jobs:
       run: |
         git checkout -b changes || git checkout changes
         git reset --hard origin/master
-        #echo 456 > test.txt
+        echo 456 > test.txt
         git config --local user.email "techops@laws.africa"
         git config --local user.name Laws.Africa
 
-        git diff --exit-code && exit 0;
+        git diff --exit-code && exit 0
         
         git add test.txt
         git commit -m "changed test.txt"
