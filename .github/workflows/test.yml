@@ -20,19 +20,25 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Make a change
+      id: change
       run: |
         git checkout -b changes || git checkout changes
         git reset --hard origin/master
-        echo 456 > test.txt
+        #echo 456 > test.txt
         git config --local user.email "techops@laws.africa"
         git config --local user.name Laws.Africa
+
+        git diff --exit-code || exit 0;
+        
         git add test.txt
         git commit -m "changed test.txt"
         git push -u origin changes --force
+        echo "::set-output name=summary::hello"
 
     # Runs a set of commands using the runners shell
     - name: Create PR
       uses: actions/github-script@0.9.0
+      if: steps.change.outputs.summary
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
@@ -51,7 +57,7 @@ jobs:
             base: "master",
           });
           if (resp.data.length > 0) {
-            github.pulls.update({...info, number: resp.data[0].number});
+            github.pulls.update({...info, pull_number: resp.data[0].number});
           } else {
             github.pulls.create({...info, head: 'changes'});
           }
