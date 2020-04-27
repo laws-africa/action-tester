@@ -36,7 +36,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          octokit.pulls.list({
+          github.pulls.list({
             owner: context.repo.owner,
             repo: context.repo.repo,
             state: "open",
@@ -53,9 +53,9 @@ jobs:
 
             if (pulls.length > 0) {
               info.number = pulls[0].number;
-              octokit.pulls.update(info);
+              github.pulls.update(info);
             } else {
               info.head = "changes";
-              octokit.pulls.create(info);
+              github.pulls.create(info);
             }
           });
