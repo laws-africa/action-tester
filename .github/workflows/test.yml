@@ -36,26 +36,22 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          github.pulls.list({
+          const info = {
+            owner: "laws-africa",
+            repo: "action-tester",
+            title: "Updated a file",
+            body: '👋 I made a change!',
+            base: 'master',
+          };
+          const resp = await github.pulls.list({
             owner: context.repo.owner,
             repo: context.repo.repo,
             state: "open",
             head: "changes",
             base: "master",
-          }).then(({data}) => {
-            let info = {
-              owner: "laws-africa",
-              repo: "action-tester",
-              title: "Updated a file",
-              body: '👋 I made a change!',
-              base: 'master',
-            }
-
-            if (data.length > 0) {
-              info.number = data[0].number;
-              github.pulls.update(info);
-            } else {
-              info.head = "changes";
-              github.pulls.create(info);
-            }
           });
+          if (resp.data.length > 0) {
+            github.pulls.update({...info, number: resp.data[0].number});
+          } else {
+            github.pulls.create({...info, head: 'changes'});
+          }
