@@ -42,7 +42,7 @@ jobs:
             state: "open",
             head: "changes",
             base: "master",
-          }).then(({pulls}) => {
+          }).then(({data}) => {
             let info = {
               owner: "laws-africa",
               repo: "action-tester",
@@ -51,8 +51,8 @@ jobs:
               base: 'master',
             }
 
-            if (pulls.length > 0) {
-              info.number = pulls[0].number;
+            if (data.length > 0) {
+              info.number = data[0].number;
               github.pulls.update(info);
             } else {
               info.head = "changes";
