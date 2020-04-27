@@ -28,7 +28,7 @@ jobs:
         git config --local user.email "techops@laws.africa"
         git config --local user.name Laws.Africa
 
-        git diff --exit-code || exit 0;
+        git diff --exit-code && exit 0;
         
         git add test.txt
         git commit -m "changed test.txt"
