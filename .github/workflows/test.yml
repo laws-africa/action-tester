@@ -36,11 +36,26 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          github.pulls.create({
+          octokit.pulls.list({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            title: "Updated a file",
+            state: "open",
             head: "changes",
             base: "master",
-            body: '👋 I made a change!'
-          })
+          }).then(({pulls}) => {
+            let info = {
+              owner: "laws-africa",
+              repo: "action-tester",
+              title: "Updated a file",
+              body: '👋 I made a change!',
+              base: 'master',
+            }
+
+            if (pulls.length > 0) {
+              info.number = pulls[0].number;
+              octokit.pulls.update(info);
+            } else {
+              info.head = "changes";
+              octokit.pulls.create(info);
+            }
+          });
