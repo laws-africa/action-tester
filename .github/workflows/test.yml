@@ -33,7 +33,7 @@ jobs:
         git add test.txt
         git commit -m "changed test.txt"
         git push -u origin changes --force
-        echo "::set-output name=summary::hello"
+        echo "::set-output name=summary::hello%0Athere"
 
     # Runs a set of commands using the runners shell
     - name: Create PR
@@ -42,7 +42,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          console.log("${{toJSON(steps.change.outputs.summary)}}");
+          console.log(${{ toJSON(steps.change.outputs.summary) }});
           const info = {
             owner: "laws-africa",
             repo: "action-tester",
