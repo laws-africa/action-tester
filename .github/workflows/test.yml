@@ -42,6 +42,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          console.log(context);
           const info = {
             owner: "laws-africa",
             repo: "action-tester",
